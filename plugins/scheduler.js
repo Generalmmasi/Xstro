@@ -7,11 +7,8 @@ const convertTo24Hour = (timeStr) => {
  if (!match) return null;
  let [_, hours, minutes, period] = match;
  hours = parseInt(hours);
- if (period === 'pm' && hours !== 12) {
-  hours += 12;
- } else if (period === 'am' && hours === 12) {
-  hours = 0;
- }
+ if (period === 'pm' && hours !== 12) hours += 12;
+ else if (period === 'am' && hours === 12) hours = 0;
  return `${String(hours).padStart(2, '0')}:${minutes}`;
 };
 
@@ -31,9 +28,8 @@ handler(
  {
   pattern: 'automute',
   alias: 'amute',
-  desc: 'Set A time to Automatically Mute A group',
+  desc: 'Set a time to automatically mute a group',
   type: 'group',
-  usage: '.automute 3:15pm',
  },
  async (message, match, m, client) => {
   if (!message.isGroup) return message.reply('_This command is only for groups_');
@@ -52,8 +48,10 @@ handler(
    schedule.muteTime = time24;
    schedule.isScheduled = true;
    await schedule.save();
+   return message.reply(`_Group will now be muted at ${match.trim()}_`);
+  } else {
+   return message.reply(`_Group will be muted at ${match.trim()}_`);
   }
-  return message.reply(`*✅ Auto-mute scheduled successfully*\n\n_Group will be muted at ${match.trim()}_`);
  }
 );
 
@@ -61,14 +59,13 @@ handler(
  {
   pattern: 'autounmute',
   alias: 'aunmute',
-  desc: 'Set Auto Unmute Time for A Group',
+  desc: 'Set a time to automatically unmute a group',
   type: 'group',
-  usage: '.autounmute 2:00am',
  },
  async (message, match, m, client) => {
-  if (!message.isGroup) return message.reply('_This command is only for groups_');
-  if (!m.isAdmin || !m.isBotAdmin) return message.reply('*I need to be admin to perform this action*');
-  if (!match) return message.reply(`*Please provide time in 12hr format*\n\n_Example: .autounmute 2:00am_`);
+  if (!message.isGroup) return message.reply(group);
+  if (!m.isAdmin || !m.isBotAdmin) return message.reply(admin);
+  if (!match) return message.reply(`*Inavaild time in 12hr format*\n\n_Example: .autounmute 2:00am_`);
   const time24 = convertTo24Hour(match.trim());
   if (!time24) return message.reply(`*Invalid time format*\n\n_Please use format like: 2:00am_`);
   const [schedule, created] = await Scheduler.findOrCreate({
@@ -82,24 +79,24 @@ handler(
    schedule.unmuteTime = time24;
    schedule.isScheduled = true;
    await schedule.save();
+   return message.reply(`_Group will now be unmuted at ${match.trim()}_`);
+  } else {
+   return message.reply(`_Group will be unmuted at ${match.trim()}_`);
   }
-  return message.reply(`*✅ Auto-unmute scheduled successfully*\n\n_Group will be unmuted at ${match.trim()}_`);
  }
 );
 
 handler(
  {
   pattern: 'getmute',
-  desc: 'Get Muting time for a group',
-  category: 'group',
+  desc: 'Get muting time for a group',
+  type: 'group',
  },
  async (message, match, m, client) => {
   if (!message.isGroup) return message.reply('_This command is only for groups_');
-  const schedule = await Scheduler.findOne({
-   where: { groupId: message.jid },
-  });
-  if (!schedule || !schedule.isScheduled) return message.reply('*No active mute schedule for this group*');
-  let response = '*📅 Mute Schedule*\n\n';
+  const schedule = await Scheduler.findOne({ where: { groupId: message.jid } });
+  if (!schedule || !schedule.isScheduled) return message.reply('No active mute schedule for this group');
+  let response = '*📅 Mute Schedules*\n\n';
   if (schedule.muteTime) response += `*🔇 Mute:* _${convertTo12Hour(schedule.muteTime)}_\n`;
   if (schedule.unmuteTime) response += `*🔊 Unmute:* _${convertTo12Hour(schedule.unmuteTime)}_\n`;
   response += `*Status:* _${schedule.isMuted ? '🔇 Muted' : '🔊 Unmuted'}_`;
@@ -111,18 +108,16 @@ handler(
  {
   pattern: 'delmute',
   desc: 'Cancel mute schedule for the group',
-  category: 'group',
+  type: 'group',
  },
  async (message, match, m, client) => {
-  if (!message.isGroup) return message.reply('_This command is only for groups_');
-  if (!m.isAdmin || !m.isBotAdmin) return message.reply('*I need to be admin to perform this action*');
-  const schedule = await Scheduler.findOne({
-   where: { groupId: message.jid },
-  });
-  if (!schedule || !schedule.isScheduled) return message.reply('*No active mute schedule to cancel*');
+  if (!message.isGroup) return message.reply(group);
+  if (!m.isAdmin || !m.isBotAdmin) return message.reply(admin);
+  const schedule = await Scheduler.findOne({ where: { groupId: message.jid } });
+  if (!schedule || !schedule.isScheduled) return message.reply('_No Jobs Where Online_');
   schedule.isScheduled = false;
   schedule.isMuted = false;
   await schedule.save();
-  return message.reply('*✅ Mute schedule cancelled successfully*');
+  return message.reply('_Mute Settings Removed_');
  }
 );

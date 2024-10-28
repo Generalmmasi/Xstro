@@ -36,6 +36,7 @@ module.exports = {
  AUTO_STATUS_READ: process.env.AUTO_STATUS_READ || false,
  PRESENCE_UPDATE: process.env.PRESENCE_UPDATE || 'available',
  MODE: process.env.MODE || 'private',
+ TIME_ZONE: process.env.TIME_ZONE || 'Africa/Lagos',
  PORT: process.env.PORT || 8000,
  DATABASE_URL: DB_URL,
  DATABASE: sequelize,
