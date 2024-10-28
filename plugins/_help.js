@@ -123,6 +123,6 @@ handler(
    },
   };
   const replyMessage = 'https://github.com/AstroX10/Xstro\n*_Xstro Bot is a simple WhatsApp bot built with Baileys, designed for speed and efficiency in automating tasks._*';
-  await message.send(replyMessage, miscOptions);
+  await client.sendMessage(replyMessage, miscOptions);
  }
 );
