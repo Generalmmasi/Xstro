@@ -109,20 +109,23 @@ handler(
   type: 'user',
  },
  async (message, match, m, client) => {
+  const githubUrl = 'https://github.com/AstroX10/Xstro';
+  const thumbnailBuffer = await getBuffer(`https://img.freepik.com/free-photo/anime-style-mythical-dragon-creature_23-2151112866.jpg?ga=GA1.1.838853164.1729690138&semt=ais_hybrid`);
   const miscOptions = {
    contextInfo: {
-    isForwarded: true,
-    forwardingScore: 999,
     externalAdReply: {
-     title: 'xstro',
-     body: 'simple bot',
-     thumbnail: await getBuffer('https://avatars.githubusercontent.com/u/183214515?v=4'),
+     title: tiny(`xstro`),
+     body: tiny(`Simple WhatsApp bot built with Baileys.`),
+     thumbnail: thumbnailBuffer,
      mediaType: 2,
      showAdAttribution: true,
     },
    },
   };
-  const replyMessage = 'https://github.com/AstroX10/Xstro\n*_Xstro Bot is a simple WhatsApp bot built with Baileys, designed for speed and efficiency in automating tasks._*';
-  await client.sendMessage(replyMessage, miscOptions);
+  const replyMessage = {
+   text: `\n${githubUrl}`,
+   ...miscOptions,
+  };
+  await client.sendMessage(message.jid, replyMessage);
  }
 );
