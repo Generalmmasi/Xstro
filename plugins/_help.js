@@ -1,3 +1,4 @@
+const axios = require('axios');
 const { tiny } = require('xstro');
 const { handler, commands, runtime, getBuffer } = require('../lib');
 
@@ -109,12 +110,17 @@ handler(
   type: 'user',
  },
  async (message, match, m, client) => {
-  const githubUrl = 'https://github.com/AstroX10/Xstro';
-  const thumbnailBuffer = await getBuffer(`https://img.freepik.com/free-photo/anime-style-mythical-dragon-creature_23-2151112866.jpg?ga=GA1.1.838853164.1729690138&semt=ais_hybrid`);
+  const githubUrl = 'https://api.github.com/repos/AstroX10/Xstro';
+  const thumbnailBuffer = await getBuffer('https://img.freepik.com/free-photo/anime-style-mythical-dragon-creature_23-2151112866.jpg?ga=GA1.1.838853164.1729690138&semt=ais_hybrid');
+  const res = await axios.get(githubUrl);
+  const { created_at, updated_at, stargazers_count, forks_count, contributors_url } = res.data;
+  const contributorsResponse = await axios.get(contributors_url);
+  const contributorsCount = contributorsResponse.data.length;
+
   const miscOptions = {
    contextInfo: {
     externalAdReply: {
-     title: tiny(`xstro`),
+     title: tiny('xstro'),
      body: tiny(`Simple WhatsApp bot built with Baileys.`),
      thumbnail: thumbnailBuffer,
      mediaType: 2,
@@ -123,9 +129,15 @@ handler(
    },
   };
   const replyMessage = {
-   text: `\n${githubUrl}`,
+   text: tiny(`Xstro Bot
+*Created At:* ${new Date(created_at).toLocaleDateString()}
+*Last Updated:* ${new Date(updated_at).toLocaleDateString()}
+*Stars:* ${stargazers_count}
+*Forks:* ${forks_count}
+*Contributors:* ${contributorsCount}\n`),
    ...miscOptions,
   };
+
   await client.sendMessage(message.jid, replyMessage);
  }
 );
