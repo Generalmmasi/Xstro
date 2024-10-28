@@ -100,3 +100,29 @@ handler(
   await message.client.sendMessage(message.jid, { contacts: { displayName: name, contacts: [{ vcard }] }, contextInfo: { externalAdReply: info } }, { quoted: message });
  }
 );
+
+handler(
+ {
+  pattern: 'repo',
+  alias: 'script',
+  desc: 'Get Repo Url',
+  type: 'user',
+ },
+ async (message, match, m, client) => {
+  const miscOptions = {
+   contextInfo: {
+    isForwarded: true,
+    forwardingScore: 999,
+    externalAdReply: {
+     title: 'xstro',
+     body: 'simple bot',
+     thumbnail: await getBuffer('https://avatars.githubusercontent.com/u/183214515?v=4'),
+     mediaType: 2,
+     showAdAttribution: true,
+    },
+   },
+  };
+  const replyMessage = 'https://github.com/AstroX10/Xstro\n*_Xstro Bot is a simple WhatsApp bot built with Baileys, designed for speed and efficiency in automating tasks._*';
+  await message.send(replyMessage, miscOptions);
+ }
+);
