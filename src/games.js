@@ -13,13 +13,29 @@ handler(
  },
  async (message) => {
   const chatId = message.jid;
-  let game = wcg.getGame(chatId);
-  if (game && game.status === 'active') return await message.reply('A game is already in progress!');
   const args = message.text.split(' ');
-  const difficulty = args[1] && ['easy', 'medium', 'hard'].includes(args[1].toLowerCase()) ? args[1].toLowerCase() : 'medium';
-  game = wcg.createGame(chatId, difficulty);
-  game.addPlayer(message.sender);
-  return await message.reply(`Word Chain Game started (${difficulty} mode)!\n` + `Minimum word length: ${game.minLength} letters\n` + `Time per turn: ${game.turnTime} seconds\n\n` + 'Type "join" to participate. Game starts when at least 2 players join.');
+  const command = args[1] ? args[1].toLowerCase() : null;
+  if (command === 'start') {
+   let game = wcg.getGame(chatId);
+   if (game && game.status === 'active') return await message.reply('A game is already in progress!');
+   const difficulty = args[2] && ['easy', 'medium', 'hard'].includes(args[2].toLowerCase()) ? args[2].toLowerCase() : 'medium';
+   game = wcg.createGame(chatId, difficulty);
+   game.addPlayer(message.sender);
+   return await message.reply(`Word Chain Game started (${difficulty} mode)!\nMinimum word length: ${game.minLength} letters\nTime per turn: ${game.turnTime} seconds\n\nType "join" to participate. Game starts when at least 2 players join.`);
+  }
+  if (command === 'end') {
+   const game = wcg.getGame(chatId);
+   if (game && game.status === 'active') {
+    const result = game.end();
+    wcg.deleteGame(chatId);
+    return await message.reply(
+     `Game ended. Winner: ${result.winner}\nFinal scores:\n${Object.entries(result.scores)
+      .map(([player, score]) => `${player}: ${score}`)
+      .join('\n')}`
+    );
+   }
+   return await message.reply('No active game to end.');
+  }
  }
 );
 
@@ -38,7 +54,7 @@ handler(
     await message.reply('You joined the game! Waiting for more players...');
     if (game.players.size >= 2) {
      game.start();
-     return await message.reply(`Game started! First player ${game.currentPlayer}'s turn.\n` + `Start with any word of at least ${game.minLength} letters.\n` + `You have ${game.turnTime} seconds per turn.`);
+     return await message.reply(`Game started! First player ${game.currentPlayer}'s turn.\nStart with any word of at least ${game.minLength} letters.\nYou have ${game.turnTime} seconds per turn.`);
     }
    }
    return;
@@ -47,14 +63,23 @@ handler(
    const validation = await game.validateTurn(message.sender, text);
 
    if (!validation.valid) {
+    if (validation.endGame) {
+     const result = game.end();
+     wcg.deleteGame(chatId);
+     return await message.reply(
+      `${validation.reason}\nGame over. Winner: ${result.winner}\nFinal scores:\n${Object.entries(result.scores)
+       .map(([player, score]) => `${player}: ${score}`)
+       .join('\n')}`
+     );
+    }
     if (validation.skipTurn) {
      game.skipCurrentTurn();
-     return await message.reply(`${validation.reason}\n` + `Next player ${game.currentPlayer}'s turn.\n` + `Current word to follow: '${game.lastWord}'\n` + `Time remaining: ${game.getTimeRemainingInCurrentTurn()} seconds`);
+     return await message.reply(`${validation.reason}\nNext player ${game.currentPlayer}'s turn.\nCurrent word to follow: '${game.lastWord}'\nTime remaining: ${game.getTimeRemainingInCurrentTurn()} seconds`);
     }
     return await message.reply(validation.reason);
    }
    game.makeMove(message.sender, text);
-   return await message.reply(`Valid word: ${text}\n` + `Next player ${game.currentPlayer}'s turn.\n` + `Word must start with: '${text[text.length - 1]}'\n` + `Time remaining: ${game.turnTime} seconds`);
+   return await message.reply(`Valid word: ${text}\nNext player ${game.currentPlayer}'s turn.\nWord must start with: '${text[text.length - 1]}'\nTime remaining: ${game.turnTime} seconds`);
   }
  }
 );
