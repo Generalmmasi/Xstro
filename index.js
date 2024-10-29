@@ -23,7 +23,7 @@ async function readAndRequireFiles(directory) {
 }
 
 async function initialize() {
- await readAndRequireFiles(path.join(__dirname, '/lib/sql/'));
+ await readAndRequireFiles(path.join(__dirname, '/lib/core/'));
  await config.DATABASE.sync();
  await readAndRequireFiles(path.join(__dirname, '/plugins/'));
  await initSession(config.SESSION_ID.trim());

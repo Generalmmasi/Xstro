@@ -1,5 +1,5 @@
 const { handler } = require('../lib');
-const Scheduler = require('../lib/sql/scheduler');
+const Scheduler = require('../lib/core/scheduler');
 
 const convertTo24Hour = (timeStr) => {
  const timeRegex = /^(0?[1-9]|1[0-2]):([0-5][0-9])(am|pm)$/i;
