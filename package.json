@@ -1,6 +1,6 @@
 {
  "name": "xstro",
- "version": "0.0.3",
+ "version": "0.0.4",
  "description": "Simple WhatsApp Bot",
  "type": "commonjs",
  "main": "index.js",
