@@ -125,7 +125,7 @@ handler(
      thumbnail: thumbnailBuffer,
      mediaType: 2,
      showAdAttribution: true,
-     sourceUrl: githubUrl,
+     sourceUrl: 'https://github.com/AstroX10/Xstro',
     },
    },
   };
