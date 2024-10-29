@@ -28,7 +28,7 @@ handler(
  },
  async (message) => {
   if (!message.reply_message?.image && !message.reply_message?.video && !message.reply_message?.audio) return message.reply('_Reply Image/Video/Audio_');
-  const media = await message.download(message.quoted?.message);
+  const media = await message.download();
   const res = await upload(media.buffer);
   return await message.reply(res);
  }

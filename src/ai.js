@@ -10,7 +10,7 @@ handler(
  },
  async (message) => {
   if (!message.reply_message?.image) return message.reply('_Reply An Image_');
-  const req = await message.download(message.quoted?.message);
+  const req = await message.download();
   const res = await enhanceImage(req.buffer, 'enhance');
   return await message.send(res);
  }
@@ -24,7 +24,7 @@ handler(
  },
  async (message) => {
   if (!message.reply_message?.image) return message.reply('_Reply An Image_');
-  const req = await message.download(message.quoted?.message);
+  const req = await message.download();
   const res = await enhanceImage(req.buffer, 'recolor');
   return await message.send(res);
  }
@@ -38,7 +38,7 @@ handler(
  },
  async (message) => {
   if (!message.reply_message?.image) return message.reply('_Reply An Image_');
-  const req = await message.download(message.quoted?.message);
+  const req = await message.download();
   const res = await enhanceImage(req.buffer, 'dehaze');
   return await message.send(res);
  }
