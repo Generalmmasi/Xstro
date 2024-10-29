@@ -25,7 +25,7 @@ async function readAndRequireFiles(directory) {
 async function initialize() {
  await readAndRequireFiles(path.join(__dirname, '/lib/core/'));
  await config.DATABASE.sync();
- await readAndRequireFiles(path.join(__dirname, '/plugins/'));
+ await readAndRequireFiles(path.join(__dirname, '/src/'));
  await initSession(config.SESSION_ID.trim());
  const Client = require('./lib/client');
  const bot = new Client();

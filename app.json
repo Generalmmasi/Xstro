@@ -1,0 +1,79 @@
+{
+ "name": "Xstro Bot",
+ "description": "Simple WhatsApp Bot",
+ "success_url": "/",
+ "stack": "container",
+ "env": {
+  "SESSION_ID": {
+   "description": "Session Id to Run Bot",
+   "value": "",
+   "required": true
+  },
+  "SUDO": {
+   "description": "Sudo Numbers",
+   "value": "",
+   "required": false
+  },
+  "PREFIX": {
+   "description": "Bot Handler",
+   "value": ".",
+   "required": false
+  },
+  "BOT_INFO": {
+   "description": "Information Such As Bot Name & Owner",
+   "value": "Astro;Xstro",
+   "required": false
+  },
+  "LOGS": {
+   "description": "Debugging Purposes (nerd)",
+   "value": "false",
+   "required": false
+  },
+  "ANTI_CALL": {
+   "description": "Block Calls to the Bot",
+   "value": "false",
+   "required": false
+  },
+  "USER_IMAGES": {
+   "description": "Path to Store User Images",
+   "value": "",
+   "required": false
+  },
+  "STICKER_PACK": {
+   "description": "Sticker Pack Name",
+   "value": "Astro;Xstro",
+   "required": false
+  },
+  "AUTO_READ_MESSAGE": {
+   "description": "Enable Auto Reading of Messages",
+   "value": "false",
+   "required": false
+  },
+  "AUTO_STATUS_READ": {
+   "description": "Enable Auto Status Reading",
+   "value": "false",
+   "required": false
+  },
+  "PRESENCE_UPDATE": {
+   "description": "Bot Presence Status",
+   "value": "available",
+   "required": false
+  },
+  "MODE": {
+   "description": "Bot Operation Mode",
+   "value": "private",
+   "required": false
+  },
+  "TIME_ZONE": {
+   "description": "Bot Timezone",
+   "value": "Africa/Lagos",
+   "required": false
+  }
+ },
+ "formation": {
+  "worker": {
+   "quantity": 1,
+   "size": "basic"
+  }
+ }
+}
