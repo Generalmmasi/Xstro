@@ -121,10 +121,11 @@ handler(
    contextInfo: {
     externalAdReply: {
      title: tiny('xstro'),
-     body: tiny(`Simple WhatsApp bot built with Baileys.`),
+     body: tiny('Simple WhatsApp bot built with Baileys.'),
      thumbnail: thumbnailBuffer,
      mediaType: 2,
      showAdAttribution: true,
+     sourceUrl: githubUrl,
     },
    },
   };
